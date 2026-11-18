@@ -1,0 +1,207 @@
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> use collegeDB
+|
+| db.students.insertOne({
+|   _id: 101,
+|   name: "Arun",
+|   dept: "CSE",
+|   marks: 78,
+|   scores: [
+|     { subject: "DBMS", mark: 85 },
+|     { subject: "Maths", mark: 70 }
+|   ]
+| })
+already on db collegeDB
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.insertOne({
+|   _id: 101,
+|   name: "Another Arun",
+|   dept: "CSE",
+|   marks: 80,
+|   scores: [
+|     { subject: "DBMS", mark: 80 },
+|     { subject: "Maths", mark: 75 }
+|   ]
+| })
+{ acknowledged: true, insertedId: 101 }
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.insertMany([
+|   {
+|     _id: 102,
+|     name: "Bala",
+|     dept: "IT",
+|     marks: 66,
+|     scores: [
+|       { subject: "DBMS", mark: 60 },
+|       { subject: "Maths", mark: 72 }
+|     ]
+|   },
+|   {
+|     _id: 103,
+|     name: "Chitra",
+|     dept: "CSE",
+|     marks: 91,
+|     scores: [
+|       { subject: "DBMS", mark: 95 },
+|       { subject: "Maths", mark: 87 }
+|     ]
+|   },
+|   {
+|     _id: 104,
+|     name: "Divya",
+|     dept: "ECE",
+|     marks: 72,
+|     scores: [
+|       { subject: "DBMS", mark: 55 },
+|       { subject: "Maths", mark: 89 }
+|     ]
+|   },
+|   {
+|     _id: 105,
+|     name: "Eswar",
+|     dept: "IT",
+|     marks: 84,
+|     scores: [
+|       { subject: "DBMS", mark: 88 },
+|       { subject: "Maths", mark: 80 }
+|     ]
+|   },
+|   {
+|     _id: 106,
+|     name: "Farah",
+|     dept: "CSE",
+|     marks: 59,
+|     scores: [
+|       { subject: "DBMS", mark: 45 },
+|       { subject: "Maths", mark: 73 }
+|     ]
+|   }
+| ])
+{
+  acknowledged: true,
+  insertedIds: { '0': 102, '1': 103, '2': 104, '3': 105, '4': 106 }
+}
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.find({
+|   dept: "CSE"
+| })
+[
+  {
+    _id: 101,
+    name: 'Another Arun',
+    dept: 'CSE',
+    marks: 80,
+    scores: [ { subject: 'DBMS', mark: 80 }, { subject: 'Maths', mark: 75 } ]
+  },
+  {
+    _id: 103,
+    name: 'Chitra',
+    dept: 'CSE',
+    marks: 91,
+    scores: [ { subject: 'DBMS', mark: 95 }, { subject: 'Maths', mark: 87 } ]
+  },
+  {
+    _id: 106,
+    name: 'Farah',
+    dept: 'CSE',
+    marks: 59,
+    scores: [ { subject: 'DBMS', mark: 45 }, { subject: 'Maths', mark: 73 } ]
+  }
+]
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.find({
+|   marks: { $gte: 75 }
+| })
+[
+  {
+    _id: 101,
+    name: 'Another Arun',
+    dept: 'CSE',
+    marks: 80,
+    scores: [ { subject: 'DBMS', mark: 80 }, { subject: 'Maths', mark: 75 } ]
+  },
+  {
+    _id: 103,
+    name: 'Chitra',
+    dept: 'CSE',
+    marks: 91,
+    scores: [ { subject: 'DBMS', mark: 95 }, { subject: 'Maths', mark: 87 } ]
+  },
+  {
+    _id: 105,
+    name: 'Eswar',
+    dept: 'IT',
+    marks: 84,
+    scores: [ { subject: 'DBMS', mark: 88 }, { subject: 'Maths', mark: 80 } ]
+  }
+]
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.find({
+|   dept: { $in: ["CSE", "IT"] }
+| })
+[
+  {
+    _id: 101,
+    name: 'Another Arun',
+    dept: 'CSE',
+    marks: 80,
+    scores: [ { subject: 'DBMS', mark: 80 }, { subject: 'Maths', mark: 75 } ]
+  },
+  {
+    _id: 102,
+    name: 'Bala',
+    dept: 'IT',
+    marks: 66,
+    scores: [ { subject: 'DBMS', mark: 60 }, { subject: 'Maths', mark: 72 } ]
+  },
+  {
+    _id: 103,
+    name: 'Chitra',
+    dept: 'CSE',
+    marks: 91,
+    scores: [ { subject: 'DBMS', mark: 95 }, { subject: 'Maths', mark: 87 } ]
+  },
+  {
+    _id: 105,
+    name: 'Eswar',
+    dept: 'IT',
+    marks: 84,
+    scores: [ { subject: 'DBMS', mark: 88 }, { subject: 'Maths', mark: 80 } ]
+  },
+  {
+    _id: 106,
+    name: 'Farah',
+    dept: 'CSE',
+    marks: 59,
+    scores: [ { subject: 'DBMS', mark: 45 }, { subject: 'Maths', mark: 73 } ]
+  }
+]
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.find({
+|   scores: {
+|     $elemMatch: {
+|       subject: "DBMS",
+|       mark: { $gt: 80 }
+|     }
+|   }
+| })
+[
+  {
+    _id: 103,
+    name: 'Chitra',
+    dept: 'CSE',
+    marks: 91,
+    scores: [ { subject: 'DBMS', mark: 95 }, { subject: 'Maths', mark: 87 } ]
+  },
+  {
+    _id: 105,
+    name: 'Eswar',
+    dept: 'IT',
+    marks: 84,
+    scores: [ { subject: 'DBMS', mark: 88 }, { subject: 'Maths', mark: 80 } ]
+  }
+]
+Atlas atlas-kj57bp-shard-0 [primary] collegeDB> db.students.find(
+|   {},
+|   { _id: 0, name: 1, marks: 1 }
+| ).sort(
+|   { marks: -1 }
+| ).limit(3)
+[
+  { name: 'Chitra', marks: 91 },
+  { name: 'Eswar', marks: 84 },
+  { name: 'Another Arun', marks: 80 }
+]

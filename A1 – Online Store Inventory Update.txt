@@ -1,0 +1,168 @@
+A1 – Online Store Inventory Update
+
+
+Windows PowerShell 5.1
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\Tushar Kumar> mongosh "mongodb+srv://cluster0.v17qhw6.mongodb.net/" --apiVersion 1 --username 2024pceaittushar58_db_user --password 4ZZ5vzi5YGH7I3im
+Current Mongosh Log ID: 6afd4fbd8d6efb6b6f199f80
+Connecting to:          mongodb+srv://<credentials>@cluster0.v17qhw6.mongodb.net/?appName=mongosh+2.10.0
+MongoServerError: bad auth : Authentication failed.
+PS C:\Users\Tushar Kumar> mongosh "mongodb+srv://cluster0.v17qhw6.mongodb.net/" --apiVersion 1 --username 2024pceaittushar58_db_user --password 4ZZ5vzi5YGH7I3im
+Current Mongosh Log ID: 6afd4fe436a62a272db7b0dc
+Connecting to:          mongodb+srv://<credentials>@cluster0.v17qhw6.mongodb.net/?appName=mongosh+2.10.0
+Using MongoDB:          8.0.37 (API Version 1)
+Using Mongosh:          2.10.0
+mongosh 2.14.2 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+Atlas atlas-kj57bp-shard-0 [primary] test> use shopDB
+|
+| db.products.insertMany([
+|   {
+|     _id: 1,
+|     name: "Wireless Mouse",
+|     category: "Accessories",
+|     price: 800,
+|     stock: 50,
+|     discontinued: false,
+|     oldCode: "WM-01"
+|   },
+|   {
+|     _id: 2,
+|     name: "Keyboard",
+|     category: "Accessories",
+|     price: 1500,
+|     stock: 30,
+|     discontinued: false,
+|     oldCode: "KB-02"
+|   },
+|   {
+|     _id: 3,
+|     name: "USB Cable",
+|     category: "Accessories",
+|     price: 200,
+|     stock: 100,
+|     discontinued: false
+|   },
+|   {
+|     _id: 4,
+|     name: "Laptop",
+|     category: "Computers",
+|     price: 55000,
+|     stock: 10,
+|     discontinued: false
+|   },
+|   {
+|     _id: 5,
+|     name: "Monitor",
+|     category: "Computers",
+|     price: 12000,
+|     stock: 15,
+|     discontinued: false
+|   },
+|   {
+|     _id: 6,
+|     name: "Old Floppy Drive",
+|     category: "Computers",
+|     price: 300,
+|     stock: 0,
+|     discontinued: true
+|   },
+|   {
+|     _id: 7,
+|     name: "Dial-up Modem",
+|     category: "Computers",
+|     price: 500,
+|     stock: 0,
+|     discontinued: true
+|   },
+|   {
+|     _id: 8,
+|     name: "CD Drive",
+|     category: "Computers",
+|     price: 400,
+|     stock: 0,
+|     discontinued: true
+|   }
+| ])
+switched to db shopDB
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.updateOne(
+|   { name: "Keyboard" },
+|   { $set: { price: 1400 } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.updateOne(
+|   { name: "Wireless Mouse" },
+|   { $inc: { stock: 25 } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.updateMany(
+|   {},
+|   { $unset: { oldCode: "" } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.replaceOne(
+|   { _id: 3 },
+|   {
+|     _id: 3,
+|     name: "USB-C Cable",
+|     category: "Accessories",
+|     price: 350,
+|     stock: 100,
+|     discontinued: false
+|   }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.deleteOne(
+|   { name: "Old Floppy Drive" }
+| )
+{ acknowledged: true, deletedCount: 0 }
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.deleteMany(
+|   { discontinued: true }
+| )
+{ acknowledged: true, deletedCount: 0 }
+Atlas atlas-kj57bp-shard-0 [primary] shopDB> db.products.aggregate([
+|   {
+|     $match: {
+|       price: { $gte: 500 }
+|     }
+|   },
+|   {
+|     $group: {
+|       _id: "$category",
+|       totalStock: { $sum: "$stock" },
+|       avgPrice: { $avg: "$price" }
+|     }
+|   },
+|   {
+|     $sort: {
+|       totalStock: -1
+|     }
+|   }
+| ])
